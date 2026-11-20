@@ -11,6 +11,7 @@ import java.util.function.Consumer;
  * The slot a section occupies in the World tab. Its content can be rebuilt (e.g. after data packs
  * changed) without touching the tab's grid, which cannot remove children.
  */
+@org.jetbrains.annotations.ApiStatus.Internal
 public final class SwappableSection implements Layout {
     private int x;
     private int y;

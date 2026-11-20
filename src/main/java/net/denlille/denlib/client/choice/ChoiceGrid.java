@@ -2,6 +2,7 @@
 package net.denlille.denlib.client.choice;
 
 /** Splits a number of buttons into lines of at most {@code perRow}. */
+@org.jetbrains.annotations.ApiStatus.Internal
 public final class ChoiceGrid {
     private ChoiceGrid() {
     }

@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 
 /** Mouse input of the tab scroll: wheel, scrollbar click and drag. */
 @Mod.EventBusSubscriber(modid = DenLib.MODID, value = Dist.CLIENT)
+@org.jetbrains.annotations.ApiStatus.Internal
 public final class TabScrollEvents {
     private TabScrollEvents() {
     }

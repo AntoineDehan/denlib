@@ -18,6 +18,7 @@ import java.util.function.Predicate;
  * Everything denlib keeps about one world creation screen. It lives in a field added to the screen
  * itself (no static map), so it is released with the screen when the player creates or cancels.
  */
+@org.jetbrains.annotations.ApiStatus.Internal
 public final class CreateWorldState {
     private final Map<ResourceLocation, Object> selections = new HashMap<>();
     private final List<ChoiceRow<?>> rows = new ArrayList<>();

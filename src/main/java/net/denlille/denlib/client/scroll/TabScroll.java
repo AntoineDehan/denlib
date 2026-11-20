@@ -1,6 +1,7 @@
 // This file was made with Claude Code
 package net.denlille.denlib.client.scroll;
 
+import net.denlille.denlib.client.TabUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -10,6 +11,8 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.util.Mth;
+
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import java.util.WeakHashMap;
  * mods can still find them); this class only moves the tab layout, and the widget mixin clips their
  * rendering to the viewport and ignores the mouse outside of it.
  */
+@ApiStatus.Internal
 public final class TabScroll {
     public static final int SCROLL_STEP = 20;
     public static final int BAR_WIDTH = 6;
@@ -102,6 +106,23 @@ public final class TabScroll {
     public static void recordMouse(double x, double y) {
         mouseX = x;
         mouseY = y;
+        dropIfTabChanged();
+    }
+
+    /**
+     * The scroll state only follows GridLayoutTabs (their doLayout re-arms it). If the player switched
+     * to a mod tab that is not one, the previous tab's state must not keep drawing its scrollbar or
+     * swallowing clicks. Checked once per frame and before handling mouse input.
+     */
+    private static void dropIfTabChanged() {
+        Active current = current();
+        if (current != null) {
+            Tab shown = TabUtil.currentTab(current.screen());
+            if (shown != null && shown != current.tab()) {
+                active = null;
+                dragging = false;
+            }
+        }
     }
 
     public static boolean isMouseInArea() {
@@ -109,6 +130,7 @@ public final class TabScroll {
     }
 
     public static boolean mouseScrolled(double x, double y, double delta) {
+        dropIfTabChanged();
         Active current = current();
         if (current == null || !contains(current.viewport(), x, y)) {
             return false;
@@ -118,6 +140,7 @@ public final class TabScroll {
     }
 
     public static boolean mousePressed(double x, double y, int button) {
+        dropIfTabChanged();
         Active current = current();
         if (current == null || button != 0 || !contains(bar(current), x, y)) {
             return false;

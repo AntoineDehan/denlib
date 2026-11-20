@@ -4,15 +4,19 @@ package net.denlille.denlib.client;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.TabButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.Screen;
+import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Finds tabs through the screen's public children (tab bar, then tab buttons, then tab) instead of
  * shadowing private fields, whose refmap entries the MixinGradle AP may fail to emit.
  */
+@ApiStatus.Internal
 public final class TabUtil {
     private TabUtil() {
     }
@@ -31,6 +35,21 @@ public final class TabUtil {
             }
         }
         return false;
+    }
+
+    /** The tab currently shown on {@code screen}, or null if the screen has no tab bar. */
+    @Nullable
+    public static Tab currentTab(Screen screen) {
+        for (GuiEventListener child : screen.children()) {
+            if (child instanceof TabNavigationBar bar) {
+                for (GuiEventListener button : bar.children()) {
+                    if (button instanceof TabButton tabButton && tabButton.isSelected()) {
+                        return tabButton.tab();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private static boolean contains(TabButton button, AbstractWidget widget) {

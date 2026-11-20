@@ -9,6 +9,8 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
+# Client-side UI only: never flag servers that do not have denlib in the server list.
+displayTest="IGNORE_ALL_VERSION"
 
 [[dependencies.${mod_id}]]
     modId="forge"

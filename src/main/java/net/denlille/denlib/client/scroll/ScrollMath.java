@@ -2,6 +2,7 @@
 package net.denlille.denlib.client.scroll;
 
 /** Pure geometry of the tab scroll: bounds, scrollbar thumb, thumb dragging. */
+@org.jetbrains.annotations.ApiStatus.Internal
 public final class ScrollMath {
     /** Empty space kept above and below the content when scrolling. */
     public static final int MARGIN = 4;
