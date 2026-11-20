@@ -9,10 +9,17 @@ import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.resources.ResourceLocation;
 
+import net.denlille.denlib.client.choice.ChoiceRow;
+import net.minecraft.client.gui.components.AbstractWidget;
+import org.jetbrains.annotations.ApiStatus;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,13 +41,14 @@ public final class CreateWorldSections {
         }
     }
 
-    public static List<Entry> sorted() {
+    private static List<Entry> sorted() {
         List<Entry> entries = new ArrayList<>(SECTIONS.values());
         entries.sort(Comparator.comparingInt(Entry::order).thenComparing(entry -> entry.id().toString()));
         return entries;
     }
 
     /** Called by the World tab mixin once vanilla built its rows. */
+    @ApiStatus.Internal
     public static void buildInto(CreateWorldScreen screen, GridLayout.RowHelper rowHelper) {
         CreateWorldState state = CreateWorldState.of(screen);
         WorldCreationUiState uiState = screen.getUiState();
@@ -75,16 +83,26 @@ public final class CreateWorldSections {
         }
     }
 
+    /** Builds one section; choice rows it registered but does not show are dropped (see BuiltRows). */
     @Nullable
     private static LayoutElement build(Entry entry, SectionContext context) {
+        List<ChoiceRow<?>> rows = CreateWorldState.of(context.screen()).rows();
+        int mark = rows.size();
+        LayoutElement element = null;
         try {
-            return entry.factory().create(context);
+            element = entry.factory().create(context);
         } catch (RuntimeException e) {
             DenLib.LOGGER.warn("World tab section {} failed to build and was skipped", entry.id(), e);
-            return null;
         }
+        Set<AbstractWidget> shown = Collections.newSetFromMap(new IdentityHashMap<>());
+        if (element != null) {
+            element.visitWidgets(shown::add);
+        }
+        BuiltRows.dropUnreachable(rows, mark, row -> shown.contains(row.title()));
+        return element;
     }
 
+    @ApiStatus.Internal
     public record Entry(ResourceLocation id, int order, SectionFactory factory) {
     }
 }

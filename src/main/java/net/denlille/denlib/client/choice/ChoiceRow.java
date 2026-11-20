@@ -2,6 +2,8 @@
 package net.denlille.denlib.client.choice;
 
 import net.denlille.denlib.client.CreateWorldState;
+import net.denlille.denlib.client.SafeCall;
+import org.jetbrains.annotations.ApiStatus;
 import net.denlille.denlib.client.section.SectionContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -77,25 +79,31 @@ public final class ChoiceRow<T> {
         return this.id;
     }
 
+    @ApiStatus.Internal
     public StringWidget title() {
         return this.title;
     }
 
+    @ApiStatus.Internal
     public boolean isRequired() {
         return this.required;
     }
 
+    @ApiStatus.Internal
     public boolean isMissing() {
         return this.selected == null;
     }
 
+    @ApiStatus.Internal
     public void flagMissing() {
         this.title.setColor(COLOR_MISSING);
     }
 
+    @ApiStatus.Internal
     public void fireOnCreate() {
-        if (this.onCreate != null && this.selected != null) {
-            this.onCreate.accept(this.selected);
+        T value = this.selected;
+        if (this.onCreate != null && value != null) {
+            SafeCall.run("onCreate of choice row " + this.id, () -> this.onCreate.accept(value));
         }
     }
 
@@ -163,7 +171,7 @@ public final class ChoiceRow<T> {
         }
         if (byPlayer) {
             if (this.onSelect != null) {
-                this.onSelect.accept(value);
+                SafeCall.run("onSelect of choice row " + this.id, () -> this.onSelect.accept(value));
             }
             // The description height may have changed: re-run the layout (and the tab scroll bounds).
             this.screen.repositionElements();
