@@ -2,6 +2,7 @@
 package net.denlille.denlib.client.section;
 
 import net.denlille.denlib.DenLib;
+import net.denlille.denlib.client.choice.ChoiceRowRegistry;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
@@ -38,6 +39,7 @@ public final class CreateWorldSections {
 
     /** Called by the World tab mixin once vanilla built its rows. */
     public static void buildInto(CreateWorldScreen screen, GridLayout.RowHelper rowHelper) {
+        ChoiceRowRegistry.reset(screen);
         SectionContext context = new SectionContext(screen, screen.getUiState());
         for (Entry entry : sorted()) {
             try {
