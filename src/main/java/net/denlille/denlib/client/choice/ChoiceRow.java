@@ -15,6 +15,8 @@ import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -119,9 +121,11 @@ public final class ChoiceRow<T> {
             GridLayout.RowHelper columns = line.createRowHelper(lineSize);
             for (int i = 0; i < lineSize; i++) {
                 Option<T> option = this.options.get(index++);
-                Button button = Button.builder(option.label(), b -> select(option.value(), true))
-                        .width(BUTTON_WIDTH)
-                        .build();
+                Button.OnPress onPress = b -> select(option.value(), true);
+                ItemStack icon = option.icon() == null ? ItemStack.EMPTY : new ItemStack(option.icon());
+                Button button = icon.isEmpty()
+                        ? Button.builder(option.label(), onPress).width(BUTTON_WIDTH).build()
+                        : new IconButton(BUTTON_WIDTH, option.label(), icon, onPress);
                 if (option.tooltip() != null) {
                     button.setTooltip(Tooltip.create(option.tooltip()));
                 }
@@ -178,7 +182,14 @@ public final class ChoiceRow<T> {
         }
     }
 
-    private record Option<T>(T value, Component label, @Nullable Component tooltip) {
+    private record Option<T>(T value, Component label, @Nullable Component tooltip, @Nullable ItemLike icon) {
+        Option<T> withTooltip(Component tooltip) {
+            return new Option<>(this.value, this.label, tooltip, this.icon);
+        }
+
+        Option<T> withIcon(ItemLike icon) {
+            return new Option<>(this.value, this.label, this.tooltip, icon);
+        }
     }
 
     public static final class Builder<T> {
@@ -203,18 +214,32 @@ public final class ChoiceRow<T> {
         }
 
         public Builder<T> option(T value, Component label) {
-            this.options.add(new Option<>(value, label, null));
+            this.options.add(new Option<>(value, label, null, null));
             return this;
         }
 
         /** Tooltip of the last added option. */
         public Builder<T> tooltip(Component tooltip) {
-            if (this.options.isEmpty()) {
-                throw new IllegalStateException("tooltip() must follow an option()");
-            }
-            Option<T> last = this.options.remove(this.options.size() - 1);
-            this.options.add(new Option<>(last.value(), last.label(), tooltip));
+            int last = lastOption("tooltip");
+            this.options.set(last, this.options.get(last).withTooltip(tooltip));
             return this;
+        }
+
+        /**
+         * Item drawn on the left of the last added option's button. An item that resolves to air
+         * (e.g. an unknown id) leaves the button without icon.
+         */
+        public Builder<T> icon(ItemLike icon) {
+            int last = lastOption("icon");
+            this.options.set(last, this.options.get(last).withIcon(icon));
+            return this;
+        }
+
+        private int lastOption(String method) {
+            if (this.options.isEmpty()) {
+                throw new IllegalStateException(method + "() must follow an option()");
+            }
+            return this.options.size() - 1;
         }
 
         public Builder<T> description(Function<T, Component> description) {

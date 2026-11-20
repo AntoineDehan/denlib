@@ -6,6 +6,8 @@ import net.denlille.denlib.client.choice.ChoiceRow;
 import net.denlille.denlib.client.section.CreateWorldSections;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +21,7 @@ public final class DevDemoSections {
     private static final ResourceLocation SIZE = new ResourceLocation(DenLib.MODID, "demo_size");
     private static final String[] DIFFICULTIES = {"peaceful", "easy", "normal", "hard", "nightmare"};
     private static final String[] SIZES = {"small", "medium", "large"};
+    private static final Item[] SIZE_ICONS = {Items.OAK_SAPLING, Items.OAK_LOG, Items.GRASS_BLOCK};
 
     private DevDemoSections() {
     }
@@ -41,9 +44,11 @@ public final class DevDemoSections {
         CreateWorldSections.register(SIZE, 10, ctx -> {
             ChoiceRow.Builder<String> row = ChoiceRow.<String>builder(ctx, SIZE,
                     Component.translatable("denlib.demo.size"));
-            for (String id : SIZES) {
+            for (int i = 0; i < SIZES.length; i++) {
+                String id = SIZES[i];
                 row.option(id, Component.translatable("denlib.demo.size." + id))
-                        .tooltip(Component.translatable("denlib.demo.size." + id + ".tooltip"));
+                        .tooltip(Component.translatable("denlib.demo.size." + id + ".tooltip"))
+                        .icon(SIZE_ICONS[i]);
             }
             return row.onCreate(id -> DenLib.LOGGER.info("[demo] size armed: {}", id)).build();
         });

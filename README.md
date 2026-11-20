@@ -9,7 +9,7 @@ and keeps that tab usable when several mods add content to it.
 
 - **World tab sections**: mods register a section; denlib injects it once, in a stable order.
 - **Choice rows**: a title, vanilla buttons (3 per line, the picked one shown pressed), an optional
-  description under the buttons and optional tooltips.
+  description under the buttons, optional tooltips and optional item icons.
 - **Required choices**: clicking *Create New World* without picking turns the title red, shows the
   tab and scrolls to the row — creation is never blocked if a section could not be injected.
 - **Auto-scroll**: a creation tab whose content overflows (e.g. GUI scale 4) gets a vanilla-style
@@ -23,6 +23,7 @@ CreateWorldSections.register(new ResourceLocation("mymod", "size"), 10, ctx ->
         ChoiceRow.<Size>builder(ctx, new ResourceLocation("mymod", "size"), Component.translatable("mymod.size"))
                 .option(Size.SMALL, Component.translatable("mymod.size.small"))
                     .tooltip(Component.translatable("mymod.size.small.tooltip"))
+                    .icon(Items.OAK_SAPLING)
                 .option(Size.LARGE, Component.translatable("mymod.size.large"))
                 .description(size -> Component.translatable("mymod.size." + size.id() + ".desc"))
                 .onCreate(size -> MyMod.armPendingSize(size))
