@@ -1,0 +1,20 @@
+{
+  "denlib.demo.difficulty": "Difficulté (démo)",
+  "denlib.demo.difficulty.peaceful": "Paisible",
+  "denlib.demo.difficulty.peaceful.desc": "Aucun monstre.",
+  "denlib.demo.difficulty.easy": "Facile",
+  "denlib.demo.difficulty.easy.desc": "Des monstres plus faibles, une survie plus clémente.",
+  "denlib.demo.difficulty.normal": "Normal",
+  "denlib.demo.difficulty.normal.desc": "L'expérience standard.",
+  "denlib.demo.difficulty.hard": "Difficile",
+  "denlib.demo.difficulty.hard.desc": "Des monstres plus coriaces, plus rapides et plus féroces — de meilleures récompenses. Cette description est volontairement longue pour tenir sur plusieurs lignes et changer la hauteur de l'onglet.",
+  "denlib.demo.difficulty.nightmare": "Cauchemar",
+  "denlib.demo.difficulty.nightmare.desc": "Tout veut votre mort.",
+  "denlib.demo.size": "Taille (démo)",
+  "denlib.demo.size.small": "Petit",
+  "denlib.demo.size.small.tooltip": "Rayon : 1000 blocs",
+  "denlib.demo.size.medium": "Moyen",
+  "denlib.demo.size.medium.tooltip": "Rayon : 2500 blocs",
+  "denlib.demo.size.large": "Grand",
+  "denlib.demo.size.large.tooltip": "Rayon : 5000 blocs"
+}

@@ -1,0 +1,20 @@
+{
+  "denlib.demo.difficulty": "Demo Difficulty",
+  "denlib.demo.difficulty.peaceful": "Peaceful",
+  "denlib.demo.difficulty.peaceful.desc": "No monsters at all.",
+  "denlib.demo.difficulty.easy": "Easy",
+  "denlib.demo.difficulty.easy.desc": "Weaker monsters, more forgiving survival.",
+  "denlib.demo.difficulty.normal": "Normal",
+  "denlib.demo.difficulty.normal.desc": "The standard experience.",
+  "denlib.demo.difficulty.hard": "Hard",
+  "denlib.demo.difficulty.hard.desc": "Tougher, faster, meaner monsters — better rewards. This description is deliberately long so that it wraps over several lines and changes the height of the tab.",
+  "denlib.demo.difficulty.nightmare": "Nightmare",
+  "denlib.demo.difficulty.nightmare.desc": "Everything wants you dead.",
+  "denlib.demo.size": "Demo Size",
+  "denlib.demo.size.small": "Small",
+  "denlib.demo.size.small.tooltip": "Radius: 1000 blocks",
+  "denlib.demo.size.medium": "Medium",
+  "denlib.demo.size.medium.tooltip": "Radius: 2500 blocks",
+  "denlib.demo.size.large": "Large",
+  "denlib.demo.size.large.tooltip": "Radius: 5000 blocks"
+}
