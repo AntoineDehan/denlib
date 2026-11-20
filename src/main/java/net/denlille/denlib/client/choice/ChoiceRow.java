@@ -1,6 +1,7 @@
 // This file was made with Claude Code
 package net.denlille.denlib.client.choice;
 
+import net.denlille.denlib.client.CreateWorldState;
 import net.denlille.denlib.client.section.SectionContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -69,7 +70,7 @@ public final class ChoiceRow<T> {
 
     /** The current selection of row {@code id} on {@code screen}, if any. */
     public static <T> Optional<T> selection(Object screen, ResourceLocation id) {
-        return SelectionStore.get(screen, id);
+        return CreateWorldState.of(screen).selection(id);
     }
 
     public ResourceLocation id() {
@@ -132,8 +133,8 @@ public final class ChoiceRow<T> {
     }
 
     private void restoreInitial(@Nullable T initial) {
-        T start = SelectionStore.<T>get(this.screen, this.id)
-                .filter(this::isOption)
+        // A selection whose option no longer exists (data packs changed) is forgotten.
+        T start = CreateWorldState.of(this.screen).<T>validSelection(this.id, this::isOption)
                 .orElse(null);
         if (start == null && initial != null && isOption(initial)) {
             start = initial;
@@ -152,7 +153,7 @@ public final class ChoiceRow<T> {
 
     private void select(T value, boolean byPlayer) {
         this.selected = value;
-        SelectionStore.put(this.screen, this.id, value);
+        CreateWorldState.of(this.screen).select(this.id, value);
         for (int i = 0; i < this.options.size(); i++) {
             this.buttons.get(i).active = !Objects.equals(this.options.get(i).value(), value);
         }
@@ -240,7 +241,7 @@ public final class ChoiceRow<T> {
             ChoiceRow<T> row = new ChoiceRow<>(this);
             LayoutElement layout = row.buildLayout();
             row.restoreInitial(this.initial);
-            ChoiceRowRegistry.add(this.context.screen(), row);
+            CreateWorldState.of(this.context.screen()).rows().add(row);
             return layout;
         }
     }

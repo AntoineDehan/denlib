@@ -14,12 +14,22 @@ public final class TabScrollEvents {
     private TabScrollEvents() {
     }
 
-    /** Post: only fires when no widget consumed the wheel. */
+    /**
+     * Pre, and cancelled: in an overflowing tab the wheel always scrolls the tab. Otherwise a CycleButton
+     * sliding under a still cursor (World Type, Generate Structures...) would silently change its value.
+     */
     @SubscribeEvent
-    public static void onMouseScrolled(ScreenEvent.MouseScrolled.Post event) {
-        if (event.getScreen() instanceof CreateWorldScreen) {
-            TabScroll.mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta());
+    public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre event) {
+        if (event.getScreen() instanceof CreateWorldScreen
+                && TabScroll.mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta())) {
+            event.setCanceled(true);
         }
+    }
+
+    /** Drops the scroll state with the screen (it references the screen and its widgets). */
+    @SubscribeEvent
+    public static void onScreenClosing(ScreenEvent.Closing event) {
+        TabScroll.forget(event.getScreen());
     }
 
     @SubscribeEvent

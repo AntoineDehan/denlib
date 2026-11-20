@@ -69,11 +69,13 @@ ChoiceRow<WorldSize> row = ChoiceRow.<WorldSize>builder(ctx, MY_ID, Component.tr
   automatiquement (et ne bloque donc jamais la création).
 - Description : mise à jour à chaque sélection ; comme sa hauteur peut changer, la lib relance la mise en
   page de l'écran (`screen.repositionElements()`), ce qui recalcule aussi le scroll.
-- **Persistance par écran** : la sélection est stockée dans un état lié à l'instance de `CreateWorldScreen`
-  (map faible écran → (id de rangée → valeur)). Un redimensionnement de la fenêtre (qui rappelle `init()`
-  et reconstruit les onglets) **restaure** la sélection et l'état enfoncé. Annuler l'écran jette l'état avec
-  lui : aucune fuite vers la création suivante. (Corrige au passage un défaut de Bounded Worlds, qui remet
-  sa sélection à zéro à chaque reconstruction de l'onglet.)
+- **Persistance par écran** : la sélection est stockée dans un champ ajouté à l'instance de
+  `CreateWorldScreen` par mixin — aucune map statique : l'état part avec l'écran, donc annuler ne fuit ni
+  mémoire ni sélection vers la création suivante. En 1.20.1 un redimensionnement ne reconstruit pas les
+  onglets (`repositionElements` seulement) : sélection et scroll sont naturellement conservés.
+- **Data packs modifiés** (onglet More → Data Packs / Experiments) : quand `dataPackResources` change, les
+  sections sont reconstruites sur place (emplacement remplaçable dans la grille) ; une sélection dont
+  l'option n'existe plus est oubliée.
 - API de lecture : `ChoiceRow.selection(screen, id)` → `Optional<T>`.
 
 ### 3.3 Choix obligatoire (gate de création)

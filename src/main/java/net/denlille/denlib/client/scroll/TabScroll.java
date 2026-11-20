@@ -150,6 +150,15 @@ public final class TabScroll {
         dragging = false;
     }
 
+    /** The screen is closing: release everything that references it. */
+    public static void forget(Screen screen) {
+        Active current = active;
+        if (current != null && current.screen() == screen) {
+            active = null;
+            dragging = false;
+        }
+    }
+
     /** Draws the scrollbar, styled like the vanilla selection lists. */
     public static void renderScrollbar(GuiGraphics graphics) {
         Active current = current();
