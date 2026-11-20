@@ -5,7 +5,9 @@
   "refmap": "mixins.denlib.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": [],
+  "client": [
+    "client.WorldTabMixin"
+  ],
   "injectors": {
     "defaultRequire": 0
   }
