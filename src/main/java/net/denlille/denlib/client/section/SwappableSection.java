@@ -1,7 +1,7 @@
 // This file was made with Claude Code
 package net.denlille.denlib.client.section;
 
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.layouts.Layout;
 import net.minecraft.client.gui.layouts.LayoutElement;
 
 import javax.annotation.Nullable;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  * The slot a section occupies in the World tab. Its content can be rebuilt (e.g. after data packs
  * changed) without touching the tab's grid, which cannot remove children.
  */
-public final class SwappableSection implements LayoutElement {
+public final class SwappableSection implements Layout {
     private int x;
     private int y;
     @Nullable
@@ -61,10 +61,14 @@ public final class SwappableSection implements LayoutElement {
         return this.inner == null ? 0 : this.inner.getHeight();
     }
 
+    /**
+     * Being a Layout matters: a parent GridLayout only arranges children that are Layouts, so without it
+     * the section's own grid would never place its widgets (they would all pile up at one point).
+     */
     @Override
-    public void visitWidgets(Consumer<AbstractWidget> consumer) {
+    public void visitChildren(Consumer<LayoutElement> consumer) {
         if (this.inner != null) {
-            this.inner.visitWidgets(consumer);
+            consumer.accept(this.inner);
         }
     }
 }
