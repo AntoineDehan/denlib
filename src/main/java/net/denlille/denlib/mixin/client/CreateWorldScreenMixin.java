@@ -5,6 +5,7 @@ import net.denlille.denlib.client.TabUtil;
 import net.denlille.denlib.client.choice.ChoiceRow;
 import net.denlille.denlib.client.choice.ChoiceRowRegistry;
 import net.denlille.denlib.client.scroll.TabScroll;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,5 +34,15 @@ public abstract class CreateWorldScreenMixin {
             return;
         }
         rows.forEach(ChoiceRow::fireOnCreate);
+    }
+
+    @Inject(method = "render", at = @At("HEAD"), require = 0)
+    private void denlib$recordMouse(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        TabScroll.recordMouse(mouseX, mouseY);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"), require = 0)
+    private void denlib$renderScrollbar(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        TabScroll.renderScrollbar(graphics);
     }
 }

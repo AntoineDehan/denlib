@@ -6,7 +6,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
+    "client.AbstractWidgetMixin",
     "client.CreateWorldScreenMixin",
+    "client.GridLayoutTabMixin",
     "client.WorldTabMixin"
   ],
   "injectors": {
